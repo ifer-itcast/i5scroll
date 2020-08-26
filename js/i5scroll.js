@@ -48,7 +48,7 @@
             $(ele).children().each(function (i, item) {
                 sum += $(item).outerHeight(true);
             });
-            ele.h = sum / 2;
+            ele.h = parseInt(sum / 2);
             o.css({
                 display: 'none'
             });
