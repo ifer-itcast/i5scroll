@@ -4,16 +4,18 @@
             this.$eles = eles;
             opts = opts || {};
             this.defaults = {
-                speed: 'normal'
+                mode: 'CSS',
+                cssSpeed: 5,
+                jsSpeed: 'normal',
             };
             this.options = $.extend(true, {}, this.defaults, opts);
-            this.options.speed = this.handleSpeed(this.options.speed);
+            this.options.jsSpeed = this.handleJsSpeed(this.options.jsSpeed);
             this.init();
         }
         init() {
             this.handleEve();
         }
-        handleSpeed(sp) {
+        handleJsSpeed(sp) {
             switch (sp) {
                 case 'slow':
                     return 50;
@@ -29,15 +31,24 @@
                 _this.cloneNode(domEle);
                 _this.initValue(domEle);
                 _this.wrapDiv(domEle);
-                _this.move(domEle);
-                _this.handleHover(domEle);
+                _this.createKeyframes();
+                if (_this.options.mode === 'CSS') {
+                    _this.moveByCss(domEle);
+                    _this.handleHoverByCss(domEle);
+                } else {
+                    _this.moveByJs(domEle);
+                    _this.handleHoverByJs(domEle);
+                }
             });
         }
         cloneNode(ele) {
             $(ele).children().clone().appendTo($(ele));
         }
         initValue(ele) {
-            $(ele).css({ margin: 0, padding: 0 });
+            $(ele).css({
+                margin: 0,
+                padding: 0
+            });
             ele.num = 0;
             const o = $(ele).parents(":hidden").eq($(ele).parents(":hidden").length - 1);
             o.css({
@@ -57,7 +68,30 @@
         wrapDiv(ele) {
             $(ele).wrap($(`<div style="height: ${ele.h}px; overflow: hidden; padding: 0">`));
         }
-        move(ele) {
+        createKeyframes() {
+            const runkeyframes = `@keyframes IFER_MOVE {
+                100%{
+                    transform: translateY(-50%);
+                }
+            }`;
+            const style = document.createElement('style');
+            style.type = 'text/css';
+            style.innerHTML = runkeyframes;
+            document.querySelector('head').appendChild(style);
+        }
+        moveByCss(ele) {
+            $(ele).css({
+                animation: `IFER_MOVE ${this.options.cssSpeed}s linear infinite`
+            });
+        }
+        handleHoverByCss(ele) {
+            $(ele).hover(function () {
+                $(this).css('animation-play-state', 'paused');
+            }, function () {
+                $(this).css('animation-play-state', 'running');
+            });
+        }
+        moveByJs(ele) {
             clearInterval(ele.timer);
             ele.timer = setInterval(() => {
                 if (Math.abs(ele.num) === ele.h) {
@@ -66,14 +100,14 @@
                     $(ele).css('transform', 'translateY(' + ele.num + 'px)');
                 }
                 ele.num--;
-            }, this.options.speed);
+            }, this.options.jsSpeed);
         }
-        handleHover(ele) {
+        handleHoverByJs(ele) {
             const _this = this;
             $(ele).hover(function () {
                 clearInterval(ele.timer);
             }, function () {
-                _this.move(ele);
+                _this.moveByJs(ele);
             });
         }
     }
