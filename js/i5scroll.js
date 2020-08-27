@@ -37,6 +37,7 @@
             $(ele).children().clone().appendTo($(ele));
         }
         initValue(ele) {
+            $(ele).css({ margin: 0, padding: 0 });
             ele.num = 0;
             const o = $(ele).parents(":hidden").eq($(ele).parents(":hidden").length - 1);
             o.css({
@@ -54,7 +55,7 @@
             });
         }
         wrapDiv(ele) {
-            $(ele).wrap($(`<div style="height: ${ele.h}px; overflow: hidden;">`));
+            $(ele).wrap($(`<div style="height: ${ele.h}px; overflow: hidden; padding: 0">`));
         }
         move(ele) {
             clearInterval(ele.timer);
