@@ -1,4 +1,4 @@
-# i5scroll
+# i5Scroll
 
 ## 基本使用
 
@@ -22,14 +22,15 @@ $(".scroll").i5Scroll({
 
 ```javascript
 $(".scroll").i5Scroll({
-    mode: 'JS',  // 也可以通过 JS 的方式移动
+    mode: 'JS', // 也可以通过 JS 的方式移动
     jsSpeed: 'normal', // 默认 normal
 });
 ```
 
 ## 我的特点
 
-支持隐藏元素滚动
+- [x] 支持隐藏元素滚动
+- [x] 解决滚动时“抖动”的问题
 
 ## 效果预览
 
